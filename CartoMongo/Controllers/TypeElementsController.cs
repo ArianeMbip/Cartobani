@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CartoMongo.Models;
 using CartoMongo.Services;
+using MongoDB.Bson;
 
 namespace CartoMongo.Controllers
 {

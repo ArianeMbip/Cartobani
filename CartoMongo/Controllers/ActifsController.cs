@@ -17,11 +17,17 @@ namespace CartoMongo.Controllers
     public class ActifsController : ControllerBase
     {
         private readonly ActifsService _actifsService;
+        private readonly TypeElementsService _typeElementsService;
+        private readonly DAsService _dAsService;
 
-        public ActifsController(ActifsService actifsService) =>
+        public ActifsController(ActifsService actifsService, TypeElementsService typeElementsService)
+        {
             _actifsService = actifsService;
+            _typeElementsService = typeElementsService;
+        }
+            
 
-        [HttpGet]
+    [HttpGet]
         public async Task<List<Actif>> Get() =>
             await _actifsService.GetAsync();
 
@@ -34,13 +40,31 @@ namespace CartoMongo.Controllers
             {
                 return NotFound();
             }
-
+             
             return actif;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(Actif newActif)
         {
+            // Récupérez l'identifiant du type d'actif spécifié dans le corps de la requête
+            //string typeActifId = newActif.TypeActif.Id;
+
+            // Récupérez l'instance correspondante de la classe TypeActif à partir de l'identifiant
+            //TypeElement typeActif = await _typeElementsService.GetAsync(typeActifId);
+
+            // Récupérer les informations du type d'actif correspondant
+            var typeActif = await _typeElementsService.GetAsync(newActif.TypeActif.Id);
+
+            if (typeActif == null)
+            {
+                return NotFound("Le type d'actif spécifié est introuvable.");
+            }
+
+            // Associer les informations du type d'actif à l'actif nouvellement créé   
+            newActif.TypeActif = typeActif;
+
+            // Appeler la méthode de création de l'actif dans le service ActifsService
             await _actifsService.CreateAsync(newActif);
 
             return CreatedAtAction(nameof(Get), new { id = newActif.Id }, newActif);

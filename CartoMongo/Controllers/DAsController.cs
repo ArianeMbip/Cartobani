@@ -38,13 +38,13 @@ namespace CartoMongo.Controllers
             return dA;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(DA newDA)
-        {
-            await _dAsService.CreateAsync(newDA);
+        // [HttpPost]
+        //public async Task<IActionResult> Post(DA newDA)
+        //{
+        //    await _dAsService.CreateAsync(newDA);
 
-            return CreatedAtAction(nameof(Get), new { id = newDA.Id }, newDA);
-        }
+        //    return CreatedAtAction(nameof(Get), new { id = newDA.Id }, newDA);
+        //}
 
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> Update(string id, DA updatedDA)
